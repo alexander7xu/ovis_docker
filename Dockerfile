@@ -12,9 +12,9 @@ apt install p7zip-full rsync ripgrep git curl tmux sudo less procps -y
 
 # create users
 ROOT_PASSWD=$(openssl rand -base64 48)
-echo "root:${ROOT_PASSWD}" | chpasswd
-useradd -m -s /bin/bash user
-echo "user:$(openssl rand -base64 48)" | chpasswd
+useradd -m -s /bin/bash -aG sudo user
+echo "user:${ROOT_PASSWD}" | chpasswd
+passwd -l root
 
 # setup xray
 useradd --system --no-create-home --home-dir /opt/xray --shell /usr/sbin/nologin xray
