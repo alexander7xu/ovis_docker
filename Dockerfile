@@ -12,7 +12,7 @@ apt install p7zip-full rsync ripgrep git curl tmux sudo less procps -y
 
 # create users
 ROOT_PASSWD=$(openssl rand -base64 48)
-useradd -m -s /bin/bash -aG sudo user
+useradd -m -s /bin/bash -G sudo user
 echo "user:${ROOT_PASSWD}" | chpasswd
 passwd -l root
 
