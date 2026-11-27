@@ -106,7 +106,7 @@ popd
 
 # Setup ovis
 pushd /home/user
-curl -fsSL https://raw.githubusercontent.com/devswha/ovis/v0.5.9/install.sh | sudo --user=user OVIS_REF=v0.5.9 OVIS_RUNTIME=herdr sh
+curl -fsSL https://ovis.sh/install.sh | sudo --user=user OVIS_RUNTIME=herdr sh
 OVIS_TOKEN=$(openssl rand -hex 32)
 echo "OVIS_TOKEN=${OVIS_TOKEN}" > /home/user/.config/herdr/plugins/config/devswha.ovis/.env
 chmod 0440 /home/user/.config/herdr/plugins/config/devswha.ovis/.env
