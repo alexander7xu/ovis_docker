@@ -8,12 +8,10 @@ umask 0077
 # update system
 apt update
 apt upgrade -y
-apt install p7zip-full rsync ripgrep git curl tmux sudo less procps -y
+apt install p7zip-full rsync ripgrep git curl tmux vim sudo less procps -y
 
 # create users
-ROOT_PASSWD=$(openssl rand -base64 48)
-useradd -m -s /bin/bash -G sudo user
-echo "user:${ROOT_PASSWD}" | chpasswd
+useradd -m -s /bin/bash user
 passwd -l root
 
 # setup xray
@@ -138,7 +136,6 @@ cat << __EOF__
       support-x25519mlkem768: true
 [INFO] End Clash Config
 Visit: http://ovis.invalid:7317/#auth=${OVIS_TOKEN}
-Root: "${ROOT_PASSWD}"
 __EOF__
 
 # Finalize
