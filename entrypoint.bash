@@ -107,13 +107,14 @@ runuser -u user -- /usr/bin/tmux -f /dev/null -S /run/ovis/tmux.sock \
     start-server \; \
     set-option -s exit-empty off \; \
     set-option -g destroy-unattached on \; \
+    set-option -g status off \; \
     server-access -w ovis
 runuser -u user -- chmod 0660 /run/ovis/tmux.sock
 chown root:ovis /run/ovis
 chmod 0555 /run/ovis
 cat << '__EOF__' > /opt/ovis/user-shell
 #!/bin/sh
-exec /usr/bin/tmux -N -S /run/ovis/tmux.sock new-session -E -c /home/user /bin/bash -l
+exec /usr/bin/tmux -u -N -S /run/ovis/tmux.sock new-session -E -c /home/user /bin/bash -l
 __EOF__
 chown root:ovis /opt/ovis/user-shell
 chmod 0550 /opt/ovis/user-shell
