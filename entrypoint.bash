@@ -99,42 +99,14 @@ chmod 0550 /opt/xray
 chmod 0550 /opt/xray/xray
 
 # Setup ovis
-useradd --system --create-home --home-dir /opt/ovis --shell /usr/sbin/nologin ovis
-mkdir -p /run/ovis
-chown user:ovis /run/ovis
-chmod 2710 /run/ovis
-runuser -u user -- /usr/bin/tmux -f /dev/null -S /run/ovis/tmux.sock \
-    start-server \; \
-    set-option -s exit-empty off \; \
-    set-option -g destroy-unattached on \; \
-    set-option -g status off \; \
-    server-access -w ovis
-runuser -u user -- chmod 0660 /run/ovis/tmux.sock
-chown root:ovis /run/ovis
-chmod 0555 /run/ovis
-cat << '__EOF__' > /opt/ovis/user-shell
-#!/bin/sh
-exec /usr/bin/tmux -u -N -S /run/ovis/tmux.sock new-session -E -c /home/user /bin/bash -l
-__EOF__
-chown root:ovis /opt/ovis/user-shell
-chmod 0550 /opt/ovis/user-shell
-OVIS_PLUGIN_DIR=/opt/ovis/.config/herdr/plugins/config/devswha.ovis
-runuser -u ovis -- mkdir -p "$OVIS_PLUGIN_DIR"
+pushd /home/user
+runuser -u user -- mkdir -p /home/user/.config/herdr/plugins/config/devswha.ovis
 OVIS_TOKEN=$(openssl rand -hex 32)
-echo "OVIS_TOKEN=${OVIS_TOKEN}" > "$OVIS_PLUGIN_DIR/.env"
-chown root:ovis "$OVIS_PLUGIN_DIR/.env"
-chmod 0440 "$OVIS_PLUGIN_DIR/.env"
-(
-    cd /opt/ovis
-    curl -fsSL https://ovis.sh/install.sh |
-        runuser -u ovis -- env \
-            HOME=/opt/ovis \
-            SHELL=/opt/ovis/user-shell \
-            OVIS_RUNTIME=herdr \
-            sh -s -- --no-service
-)
-chown root:ovis /opt/ovis
-chmod 0550 /opt/ovis
+echo "OVIS_TOKEN=${OVIS_TOKEN}" > /home/user/.config/herdr/plugins/config/devswha.ovis/.env
+chown root:user /home/user/.config/herdr/plugins/config/devswha.ovis/.env
+chmod 0440 /home/user/.config/herdr/plugins/config/devswha.ovis/.env
+curl -fsSL https://ovis.sh/install.sh | runuser -u user -- env OVIS_RUNTIME=herdr sh
+popd
 
 # Hint
 cat << __EOF__
